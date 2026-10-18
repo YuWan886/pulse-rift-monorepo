@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>PULSE//RIFT — procedural film</title>
+<style>
+  @font-face {
+    font-family: 'Orbitron';
+    src: url('/pulse-rift/fonts/orbitron-var.woff2') format('woff2-variations');
+    font-weight: 400 900;
+    font-display: block;
+  }
+  @font-face {
+    font-family: 'Chakra Petch';
+    src: url('/pulse-rift/fonts/chakra-400.woff2') format('woff2');
+    font-weight: 400;
+    font-display: block;
+  }
+  @font-face {
+    font-family: 'Chakra Petch';
+    src: url('/pulse-rift/fonts/chakra-600.woff2') format('woff2');
+    font-weight: 600;
+    font-display: block;
+  }
+  @font-face {
+    font-family: 'Chakra Petch';
+    src: url('/pulse-rift/fonts/chakra-700.woff2') format('woff2');
+    font-weight: 700;
+    font-display: block;
+  }
+  html, body { margin: 0; padding: 0; background: #020107; overflow: hidden; }
+  canvas { display: block; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/pulse-rift-promo/node_modules/three/build/three.module.js",
+    "three/addons/": "/pulse-rift-promo/node_modules/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

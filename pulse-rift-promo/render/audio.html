@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>PULSE//RIFT — audio render</title></head>
+<body style="background:#020107;color:#37f5ff;font-family:monospace;padding:2em">
+<div id="status">rendering soundtrack in segments…</div>
+<div id="log" style="color:#9db5c4;white-space:pre;margin-top:1em;font-size:12px"></div>
+<script type="module">
+import { renderSoundtrackSegments, bufferToWav, bufferToWav32 } from './audio.js';
+(async () => {
+  const t0 = performance.now();
+  const statusEl = document.getElementById('status');
+  const logEl = document.getElementById('log');
+  try {
+    const buffer = await renderSoundtrackSegments({
+      sampleRate: 48000,
+      segmentSeconds: 16,
+      preroll: 4,
+      onProgress: (p) => {
+        const line = `chunk ${p.done}/${p.total}  ${p.start.toFixed(0)}s → ${p.end.toFixed(0)}s  (${p.renderMs} ms)`;
+        statusEl.textContent = line;
+        logEl.textContent += line + '\n';
+      }
+    });
+    statusEl.textContent = 'encoding wav…';
+    const useFloat = new URLSearchParams(location.search).has('float');
+    const wav = useFloat ? bufferToWav32(buffer) : bufferToWav(buffer);
+    const blob = new Blob([wav], { type: 'audio/wav' });
+    const name = useFloat ? 'soundtrack_raw.wav' : 'soundtrack.wav';
+    await fetch('/upload?name=' + name, { method: 'POST', body: blob });
+    let peak = 0, rms = 0, n = 0;
+    for (let c = 0; c < buffer.numberOfChannels; c++) {
+      const d = buffer.getChannelData(c);
+      for (let i = 0; i < d.length; i += 7) {
+        const v = Math.abs(d[i]);
+        if (v > peak) peak = v;
+        rms += d[i] * d[i]; n++;
+      }
+    }
+    const info = {
+      ok: true, seconds: buffer.duration, bytes: blob.size,
+      renderMs: Math.round(performance.now() - t0),
+      peak: +peak.toFixed(4), rms: +Math.sqrt(rms / n).toFixed(4),
+      segments: buffer.segments
+    };
+    statusEl.textContent = 'done';
+    document.getElementById('log').textContent += JSON.stringify(info, null, 2);
+    window.__audioDone = info;
+  } catch (e) {
+    statusEl.textContent = 'ERROR ' + (e && e.stack || e);
+    window.__audioDone = { ok: false, error: String(e && e.stack || e) };
+  }
+})();
+</script>
+</body></html>

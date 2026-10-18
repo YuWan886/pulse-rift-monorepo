@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PULSE//RIFT cards</title>
+<style>
+@font-face { font-family: 'Orbitron'; src: url('/pulse-rift/fonts/orbitron-var.woff2') format('woff2'); font-weight: 400 900; }
+@font-face { font-family: 'Chakra'; src: url('/pulse-rift/fonts/chakra-400.woff2') format('woff2'); font-weight: 400; }
+@font-face { font-family: 'Chakra'; src: url('/pulse-rift/fonts/chakra-600.woff2') format('woff2'); font-weight: 600; }
+@font-face { font-family: 'Chakra'; src: url('/pulse-rift/fonts/chakra-700.woff2') format('woff2'); font-weight: 700; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; background: #05020c; overflow: hidden; }
+html.caption, body.caption { background: transparent !important; }
+#root { position: relative; width: 2560px; height: 1440px; overflow: hidden; font-family: 'Chakra', sans-serif; }
+.card { position: absolute; inset: 0; background:
+  radial-gradient(1200px 900px at 30% 46%, rgba(55,245,255,0.055), transparent 60%),
+  radial-gradient(1000px 800px at 78% 30%, rgba(178,107,255,0.045), transparent 65%),
+  linear-gradient(180deg, #06030f 0%, #04020a 60%, #030108 100%);
+}
+.grid { position: absolute; inset: 0; opacity: .16;
+  background-image: linear-gradient(rgba(120,220,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(120,220,255,.05) 1px, transparent 1px);
+  background-size: 160px 160px;
+  mask-image: radial-gradient(ellipse at 45% 50%, #000 20%, transparent 72%);
+}
+.ring { position: absolute; border-radius: 50%; border: 1px solid rgba(55,245,255,.10); }
+.r1 { width: 980px; height: 980px; left: 1450px; top: 120px; transform: translate(-50%, 0); border-color: rgba(55,245,255,.13); }
+.r2 { width: 1260px; height: 1260px; left: 1450px; top: -25px; transform: translate(-50%, 0); border-color: rgba(255,209,102,.09); }
+.r3 { width: 1560px; height: 1560px; left: 1450px; top: -175px; transform: translate(-50%, 0); border-color: rgba(255,46,136,.075); }
+.r4 { width: 760px; height: 760px; left: 1450px; top: 230px; transform: translate(-50%, 0); border-color: rgba(255,255,255,.05); }
+.arc { position: absolute; border-radius: 50%; border: 2px solid transparent; }
+.a1 { width: 980px; height: 980px; left: 1450px; top: 120px; transform: translate(-50%, 0);
+  border-top-color: rgba(55,245,255,.34); border-right-color: rgba(55,245,255,.10); filter: drop-shadow(0 0 18px rgba(55,245,255,.25)); }
+.a2 { width: 1260px; height: 1260px; left: 1450px; top: -25px; transform: translate(-50%, 0);
+  border-bottom-color: rgba(255,209,102,.20); border-left-color: rgba(255,209,102,.06); }
+
+.brand { position: absolute; left: 150px; top: 96px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 9px; color: rgba(233,251,255,.72); }
+.brand i { color: #ff2e88; font-style: normal; }
+.brand-line { position: absolute; left: 152px; top: 146px; width: 120px; height: 2px; background: linear-gradient(90deg, #37f5ff, rgba(55,245,255,0)); }
+.topright { position: absolute; right: 150px; top: 104px; font-family: 'Chakra', sans-serif; font-weight: 600; font-size: 18px; letter-spacing: 11px; color: rgba(233,251,255,.30); }
+.topright b { color: var(--accent); font-weight: 600; }
+
+.big { position: absolute; right: 210px; top: 250px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 560px; line-height: .8; letter-spacing: -14px;
+  color: transparent; -webkit-text-stroke: 2px rgba(55,245,255,.16); opacity: .9; }
+.block { position: absolute; left: 150px; top: 640px; width: 1500px; }
+.kicker { display: flex; align-items: center; gap: 22px; font-family: 'Chakra', sans-serif; font-weight: 600; font-size: 23px; letter-spacing: 12px; color: var(--accent); text-transform: uppercase; }
+.kicker .dash { width: 70px; height: 1px; background: var(--accent); opacity: .65; }
+.title { margin-top: 26px; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 138px; line-height: .94; letter-spacing: 4px;
+  color: #f2feff; text-shadow: 0 0 42px rgba(55,245,255,.16); }
+.title em { font-style: normal; color: var(--accent); }
+.cn { margin-top: 22px; font-family: 'Chakra', 'Microsoft YaHei', sans-serif; font-weight: 600; font-size: 34px; letter-spacing: 16px; color: rgba(233,251,255,.62); }
+.rule { margin-top: 40px; display: flex; align-items: center; gap: 16px; }
+.rule .l { width: 180px; height: 2px; background: linear-gradient(90deg, var(--accent), rgba(255,255,255,.06)); }
+.rule .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 16px var(--accent); }
+.sub { margin-top: 26px; font-family: 'Chakra', sans-serif; font-weight: 500; font-size: 25px; letter-spacing: 9px; color: rgba(233,251,255,.47); text-transform: uppercase; }
+.meta { position: absolute; left: 150px; bottom: 96px; font-family: 'Chakra', sans-serif; font-weight: 500; font-size: 18px; letter-spacing: 8px; color: rgba(233,251,255,.26); }
+.meta b { color: rgba(55,245,255,.55); font-weight: 600; }
+
+/* captions */
+.cap { position: absolute; left: 0; top: 0; width: 2560px; height: 1440px; }
+.cap-glow { position: absolute; left: -220px; top: 690px; width: 1500px; height: 460px;
+  background: radial-gradient(ellipse at 30% 50%, rgba(3,2,9,.72), rgba(3,2,9,.30) 45%, transparent 72%); }
+.cap-bar { position: absolute; left: 152px; top: 760px; width: 3px; height: 126px; background: linear-gradient(180deg, var(--accent), rgba(255,255,255,.05)); box-shadow: 0 0 16px var(--accent); }
+.cap-body { position: absolute; left: 196px; top: 752px; }
+.cap-kicker { font-family: 'Chakra', sans-serif; font-weight: 600; font-size: 21px; letter-spacing: 10px; color: var(--accent); text-transform: uppercase; }
+.cap-title { margin-top: 14px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 46px; letter-spacing: 2px; color: #f4feff; text-shadow: 0 2px 24px rgba(0,0,0,.8); }
+.cap-sub { margin-top: 12px; font-family: 'Chakra', 'Microsoft YaHei', sans-serif; font-weight: 500; font-size: 25px; letter-spacing: 3px; color: rgba(233,251,255,.60); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const DATA = {
+  card01: { accent: '#37f5ff', index: '01', kicker: 'CHAPTER 01 // CORE LOOP', title: 'THE LOOP', cn: '核 心 循 环', sub: 'EVERY SHOT IS A NOTE', meta: '120 BPM <b>//</b> RHYTHM ROGUELIKE SHOOTER' },
+  card02: { accent: '#ffd166', index: '02', kicker: 'CHAPTER 02 // SIGNAL BUILD', title: 'REWRITE<br>YOUR SIGNAL', cn: '重 写 你 的 信 号', sub: '26 UPGRADES · FOUR TRACKS · ONE RUN', meta: 'EVERY PICK ADDS AN INSTRUMENT <b>//</b> GENERATIVE SCORE' },
+  card03: { accent: '#ff2e88', index: '03', kicker: 'CHAPTER 03 // DEEP PULSE', title: 'THREATS', cn: '深 层 脉 冲', sub: 'NINE CLASSES OF NOISE', meta: 'SECTOR II <b>//</b> ELITE VARIANTS · NO SAFE SPACE' },
+  card04: { accent: '#ffd166', index: '04', kicker: 'CHAPTER 04 // THE MAESTRO', title: 'CONDUCTOR', cn: '指 挥 家', sub: 'THE VOID HAS A TEMPO', meta: 'WAVE 10 <b>//</b> BOSS ENCOUNTER' },
+  cap1: { accent: '#37f5ff', kicker: 'ON-BEAT FIRE', title: 'PERFECT ×2.0', sub: '每一次踩拍，都是一个音符' },
+  cap2: { accent: '#ffd166', kicker: 'COMBO', title: 'THE LONGER YOU HOLD', sub: '连击越高，伤害越强，配乐越亮' },
+  cap3: { accent: '#b26bff', kicker: 'PHASE DASH', title: 'ERASE THE PATTERN', sub: '踩拍闪避 · 释放相位冲击波' },
+  cap4: { accent: '#ffd166', kicker: 'OVERDRIVE', title: 'REWRITE THE SCORE', sub: '同步率满格 · 让整首曲子为你让路' },
+  cap5: { accent: '#37f5ff', kicker: 'THE BUILD', title: 'FOUR TRACKS, ONE RUN', sub: '每一类强化，都会为配乐叠加一条新音轨' },
+  cap6: { accent: '#ffd166', kicker: 'SYNC', title: 'EVERY PICK IS A NOTE', sub: '你选择什么，世界就演奏什么' },
+  cap7: { accent: '#ff2e88', kicker: 'BRUTE // 重低音兽', title: 'ARMORED. HIGH MASS.', sub: '血厚、弹重、逼近得毫不讲理' },
+  cap8: { accent: '#46ffd4', kicker: 'PRISM // 棱镜塔', title: 'IT BENDS THE BEAT.', sub: '静止的塔，却在改写整片弹幕' },
+  cap9: { accent: '#37f5ff', kicker: 'SNIPER // 切分狙击', title: 'OFF-BEAT, ON TARGET.', sub: '切分音一样的冷枪' },
+  cap10: { accent: '#ffd166', kicker: 'OVERDRIVE', title: 'THE WHOLE SCREEN SINGS', sub: '在节拍上启动，延长四拍' },
+  cap11: { accent: '#ffd166', kicker: 'BOSS // CONDUCTOR', title: 'THE MAESTRO', sub: '每一个动作，都是一次指挥' },
+  cap12: { accent: '#ff2e88', kicker: 'PHASE II', title: 'THE PATTERN TIGHTENS', sub: '弹幕开始按照节拍合拢' },
+  cap13: { accent: '#ff2e88', kicker: 'PHASE III', title: 'NO SAFE SPACE', sub: '最后的小节，最密的音墙' },
+  cap14: { accent: '#ffd166', kicker: 'FINAL CADENCE', title: 'THE LAST BEAT', sub: '裂隙正在闭合 · 节拍仍在继续' }
+};
+const id = new URLSearchParams(location.search).get('id') || 'card01';
+const d = DATA[id];
+const root = document.getElementById('root');
+root.style.setProperty('--accent', d.accent);
+if (id.startsWith('cap')) {
+  document.documentElement.classList.add('caption');
+  document.body.classList.add('caption');
+  root.innerHTML = `
+    <div class="cap">
+      <div class="cap-glow"></div>
+      <div class="cap-bar"></div>
+      <div class="cap-body">
+        <div class="cap-kicker">${d.kicker}</div>
+        <div class="cap-title">${d.title}</div>
+        <div class="cap-sub">${d.sub}</div>
+      </div>
+    </div>`;
+} else {
+  root.innerHTML = `
+    <div class="card">
+      <div class="grid"></div>
+      <div class="ring r3"></div><div class="ring r2"></div><div class="ring r1"></div><div class="ring r4"></div>
+      <div class="arc a1"></div><div class="arc a2"></div>
+      <div class="brand">PULSE<i>//</i>RIFT</div>
+      <div class="brand-line"></div>
+      <div class="topright">GAMEPLAY <b>SHOWCASE</b></div>
+      <div class="big">${d.index}</div>
+      <div class="block">
+        <div class="kicker"><span class="dash"></span>${d.kicker}</div>
+        <div class="title">${d.title}</div>
+        <div class="cn">${d.cn}</div>
+        <div class="rule"><span class="l"></span><span class="dot"></span></div>
+        <div class="sub">${d.sub}</div>
+      </div>
+      <div class="meta">${d.meta}</div>
+    </div>`;
+}
+document.fonts.ready.then(() => { window.__ready = true; });
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="background:#000;color:#0ff;font-family:monospace;padding:2em">
+<div id="s">testing…</div>
+<script type="module">
+import { renderSoundtrackWindow } from './audio.js';
+(async () => {
+  const a = await renderSoundtrackWindow(32, 48, 48000);
+  const b = await renderSoundtrackWindow(144, 160, 48000);
+  const stat = (buf) => {
+    let peak=0, rms=0, n=0;
+    for (let c=0;c<buf.numberOfChannels;c++){ const d=buf.getChannelData(c); for(let i=0;i<d.length;i+=3){ const v=Math.abs(d[i]); if(v>peak)peak=v; rms+=d[i]*d[i]; n++; } }
+    return { peak:+peak.toFixed(3), rms:+Math.sqrt(rms/n).toFixed(3) };
+  };
+  const out = { drop: stat(a), overdrive: stat(b) };
+  document.getElementById('s').textContent = JSON.stringify(out);
+  window.__testDone = out;
+})();
+</script></body></html>

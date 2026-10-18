@@ -1,0 +1,16 @@
+[
+ {"at":3.0,"fn":"setCards","arg":["amp","barrier","aftershock"]},
+ {"at":5.2,"fn":"setCards","arg":["split","magnet","resonance"]},
+ {"at":7.0,"fn":"upgrade","arg":"echo","n":1},
+ {"at":7.02,"fn":"upgrade","arg":"homing","n":1},
+ {"at":7.04,"fn":"upgrade","arg":"ricochet","n":1},
+ {"at":7.06,"fn":"upgrade","arg":"presto","n":2},
+ {"at":7.08,"fn":"upgrade","arg":"aftershock","n":1},
+ {"at":7.1,"fn":"upgrade","arg":"overflow","n":1},
+ {"at":7.12,"fn":"upgrade","arg":"odcore","n":1},
+ {"at":7.14,"fn":"upgrade","arg":"harvest","n":1},
+ {"at":7.16,"fn":"upgrade","arg":"split","n":1},
+ {"at":7.18,"fn":"upgrade","arg":"amp","n":1},
+ {"at":7.6,"fn":"autofire"},
+ {"at":14.2,"fn":"sync100"}
+]

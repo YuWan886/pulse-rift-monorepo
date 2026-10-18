@@ -1,0 +1,18 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><script>
+function driveCurve(amount=3,n=1024){const c=new Float32Array(n);for(let i=0;i<n;i++){const x=(i/(n-1))*2-1;c[i]=Math.tanh(x*amount)/Math.tanh(amount);}return c;}
+async function run(gain, useComp, useLimiter) {
+  const ctx = new OfflineAudioContext(2, 48000, 48000);
+  const o = ctx.createOscillator(); o.type='sine'; o.frequency.value=220;
+  const m = ctx.createGain(); m.gain.value = gain;
+  o.connect(m);
+  let last = m;
+  if (useComp) { const c=ctx.createDynamicsCompressor(); c.threshold.value=-8; c.knee.value=22; c.ratio.value=1.8; c.attack.value=0.02; c.release.value=0.25; last.connect(c); last=c; }
+  if (useLimiter) { const w=ctx.createWaveShaper(); w.curve=driveCurve(0.9); w.oversample='4x'; last.connect(w); last=w; }
+  last.connect(ctx.destination);
+  o.start(0);
+  const b=await ctx.startRendering();
+  let peak=0; const d=b.getChannelData(0); for(let i=0;i<d.length;i++) peak=Math.max(peak,Math.abs(d[i]));
+  return peak;
+}
+(async()=>{const out={};out.a=await run(0.002,false,false);out.b=await run(0.002,true,false);out.c=await run(0.002,false,true);out.d=await run(0.002,true,true);out.e=await run(1,true,true);window.__done=out;document.body.textContent=JSON.stringify(out);})();
+</script></body></html>

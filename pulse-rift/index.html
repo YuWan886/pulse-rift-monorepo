@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05020c">
+<title>PULSE//RIFT · 律动裂隙</title>
+<meta name="description" content="PULSE//RIFT — 一款把每一次射击变成音符的节奏肉鸽射击游戏。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2305020c'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%2337f5ff' stroke-width='5'/%3E%3Ccircle cx='50' cy='50' r='8' fill='%23ffd166'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game" aria-label="PULSE RIFT game canvas"></canvas>
+
+  <div class="fx fx-vignette" id="fxVignette"></div>
+  <div class="fx fx-scanlines" id="fxScanlines"></div>
+  <div class="fx fx-grain"></div>
+  <div class="fx fx-flash" id="fxFlash"></div>
+
+  <div id="uiLayer">
+    <!-- ═══════════════ TITLE ═══════════════ -->
+    <section id="titleScreen" class="screen title-screen">
+      <div class="title-deco title-deco-left">SYNC<br>FIELD<br>//<br>001</div>
+      <div class="title-deco title-deco-right">律<br>動<br>裂<br>隙</div>
+
+      <div class="title-inner">
+        <div class="title-topline">
+          <span class="micro">RHYTHM ROGUELIKE SHOOTER</span>
+          <span class="audio-status" id="audioStatus"><i></i><span id="audioStatusText">AUDIO OFFLINE · 点击任意处接入声场</span></span>
+          <span class="micro">SECTOR&nbsp;I–∞</span>
+        </div>
+
+        <div class="logo-block">
+          <div class="logo-eyebrow"><span></span>EVERY SHOT IS A NOTE<span></span></div>
+          <h1 class="logo" data-text="PULSE//RIFT">
+            <span class="l1">PULSE</span><span class="l2">//</span><span class="l3">RIFT</span>
+          </h1>
+          <div class="logo-cn">律 动 裂 隙</div>
+          <p class="tagline">在崩坏的声场里，把每一次心跳写成子弹。</p>
+        </div>
+
+        <div class="title-actions">
+          <button id="btnStart" class="btn btn-primary" type="button">
+            <span class="btn-main">开始潜入</span><span class="btn-sub">START RUN</span>
+          </button>
+          <button id="btnHow" class="btn" type="button"><span class="btn-main">玩法</span><span class="btn-sub">HOW TO PLAY</span></button>
+          <button id="btnSettings" class="btn" type="button"><span class="btn-main">设置</span><span class="btn-sub">SETTINGS</span></button>
+        </div>
+
+        <div class="title-stats">
+          <div class="tstat"><span>HIGH SCORE</span><b id="bestScore">0</b></div>
+          <div class="tstat"><span>DEEPEST WAVE</span><b id="bestWave">0</b></div>
+          <div class="tstat"><span>RHYTHM</span><b class="cyan">120 BPM</b></div>
+        </div>
+
+        <div class="title-hint">按 <kbd>ENTER</kbd> 直接开始 · 建议佩戴耳机 · 键盘 + 鼠标</div>
+      </div>
+
+      <div class="title-bottom">
+        <span><kbd>WASD</kbd> 移动</span>
+        <span><kbd>鼠标</kbd> 瞄准</span>
+        <span><kbd>左键 / J</kbd> 节拍射击</span>
+        <span><kbd>SPACE</kbd> 节拍闪避</span>
+        <span><kbd>E</kbd> 超频</span>
+        <span><kbd>ESC</kbd> 暂停</span>
+      </div>
+      <div class="title-version">PULSE//RIFT v1.0 · GENERATIVE AUDIO · PROCEDURAL VISUALS</div>
+    </section>
+
+    <!-- ═══════════════ UPGRADE ═══════════════ -->
+    <section id="upgradeScreen" class="screen upgrade-screen hidden">
+      <div class="upgrade-head">
+        <div class="kicker"><span class="kicker-line"></span>SIGNAL UPGRADE // 第 <b id="upWave">1</b> 波清除<span class="kicker-line"></span></div>
+        <h2>重写你的信号</h2>
+        <p>每一次强化，也会改写正在播放的音乐。<span class="dim">选择一项。</span></p>
+      </div>
+      <div id="upgradeCards" class="cards" role="group" aria-label="Upgrade choices"></div>
+      <div class="upgrade-foot">
+        <button id="btnReroll" class="btn btn-small" type="button">重掷 REROLL <span id="rerollCount" class="reroll-badge">1</span></button>
+        <div class="upgrade-hint">按 <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> 选择 · <kbd>R</kbd> 重掷</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ PAUSE ═══════════════ -->
+    <section id="pauseScreen" class="screen pause-screen hidden">
+      <div class="panel pause-panel">
+        <div class="kicker">TIME FROZEN</div>
+        <h2 class="panel-title">暂停 <span>PAUSED</span></h2>
+        <p class="panel-sub">节拍停在原处。准备好后，让世界继续旋转。</p>
+        <div class="panel-actions">
+          <button id="btnResume" class="btn btn-primary" type="button"><span class="btn-main">继续</span><span class="btn-sub">RESUME</span></button>
+          <button id="btnPauseSettings" class="btn" type="button"><span class="btn-main">设置</span><span class="btn-sub">SETTINGS</span></button>
+          <button id="btnQuit" class="btn btn-ghost" type="button"><span class="btn-main">放弃本次潜入</span><span class="btn-sub">ABANDON RUN</span></button>
+        </div>
+        <div class="pause-tip"><kbd>ESC</kbd> 继续 · <kbd>M</kbd> 静音</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ GAME OVER ═══════════════ -->
+    <section id="gameoverScreen" class="screen gameover-screen hidden">
+      <div class="result-wrap">
+        <div class="result-kicker">RUN TERMINATED</div>
+        <div class="result-title-row">
+          <h2 class="result-title glitch" data-text="SIGNAL LOST">SIGNAL LOST</h2>
+          <div class="grade-badge" id="goGrade">C</div>
+        </div>
+        <p class="result-sub">你的旋律停在第 <b id="goWave">1</b> 波。<span id="goEndless" class="dim"></span></p>
+        <div class="score-line"><span>SCORE</span><b id="goScore">0</b><span id="goRecord" class="record-tag hidden">NEW RECORD</span></div>
+        <div class="stat-grid" id="goStats"></div>
+        <div class="panel-actions row">
+          <button id="btnRetry" class="btn btn-primary" type="button"><span class="btn-main">再次潜入</span><span class="btn-sub">RETRY</span></button>
+          <button id="btnGoTitle" class="btn" type="button"><span class="btn-main">返回标题</span><span class="btn-sub">TITLE</span></button>
+        </div>
+        <div class="result-hint">RHYTHM IS POWER. 連擊越高，傷害越強。</div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ VICTORY ═══════════════ -->
+    <section id="victoryScreen" class="screen victory-screen hidden">
+      <div class="result-wrap victory-wrap">
+        <div class="result-kicker gold">SECTOR CLEARED // ∞ UNLOCKED</div>
+        <h2 class="result-title victory-title">SIGNAL ASCENDED</h2>
+        <p class="result-sub">你穿过了裂隙。但节拍，永远不会结束。</p>
+        <div class="victory-rank"><span>RANK // 评级</span><div class="grade-badge small" id="winGrade">A</div></div>
+        <div class="score-line"><span>SCORE</span><b id="winScore">0</b><span id="winRecord" class="record-tag hidden">NEW RECORD</span></div>
+        <div class="stat-grid" id="winStats"></div>
+        <div class="panel-actions row">
+          <button id="btnContinue" class="btn btn-primary" type="button"><span class="btn-main">继续深入</span><span class="btn-sub">ENDLESS MODE</span></button>
+          <button id="btnWinTitle" class="btn" type="button"><span class="btn-main">返回标题</span><span class="btn-sub">TITLE</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ MODALS ═══════════════ -->
+    <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
+    <section id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+      <button class="modal-close" data-close="help" type="button" aria-label="Close">✕</button>
+      <div class="kicker">FIELD MANUAL // 作战手册</div>
+      <h2 id="helpTitle" class="modal-title">跟着节拍活下去</h2>
+      <div class="help-grid">
+        <div class="help-col">
+          <h3>01 / 控制</h3>
+          <div class="keyrow"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>移动（或方向键）</span></div>
+          <div class="keyrow"><kbd>鼠标</kbd><span>瞄准</span></div>
+          <div class="keyrow"><kbd>左键</kbd><kbd>J</kbd><span>射击</span></div>
+          <div class="keyrow"><kbd>SPACE</kbd><span>冲刺 / 闪避</span></div>
+          <div class="keyrow"><kbd>E</kbd><span>同步率满时进入超频</span></div>
+          <div class="keyrow"><kbd>ESC</kbd><span>暂停</span></div>
+        </div>
+        <div class="help-col">
+          <h3>02 / 节拍射击</h3>
+          <p>准星外的圆环会在每个节拍收缩至中心。圆环闭合的瞬间点击，就是 <b class="gold">PERFECT</b>。</p>
+          <div class="timing-table">
+            <div><b class="gold">PERFECT</b><span>±90ms</span><em>×2.0 伤害 · 连击 · 同步</em></div>
+            <div><b class="cyan">GOOD</b><span>±170ms</span><em>×1.25 伤害 · 连击</em></div>
+            <div><b class="red">OFF-BEAT</b><span>其余</span><em>×0.5 伤害 · 清空连击</em></div>
+          </div>
+          <p class="dim small">按住左键会自动按八分音符射击，但只有手动踩点才能获得连击与同步率。PERFECT 的枪声会变成旋律。</p>
+        </div>
+        <div class="help-col">
+          <h3>03 / 生存法则</h3>
+          <p><b>连击 = 伤害。</b>每层连击提供 1% 伤害，最高 +100%。受到伤害会清空连击。</p>
+          <p><b>踩拍闪避</b>会释放相位冲击波，清除周围弹幕并积攒同步率。同步率满格后按 <kbd>E</kbd> 超频，进入 8 拍的火力全开状态——在节拍上启动，还能延长 4 拍。</p>
+          <p><b>擦弹</b>（贴近敌弹而不被击中）也会积攒同步率。危险，就是资源。</p>
+          <p><b>每波结束</b>三选一强化。强化的类别会为配乐叠加新的音轨。</p>
+        </div>
+      </div>
+      <div class="help-footer">
+        <span>耳机体验最佳。若音画不同步，可在设置中调整 <b>音画偏移</b>。</span>
+        <button class="btn btn-small modal-close-btn" data-close="help" type="button">了解 / CLOSE</button>
+      </div>
+    </section>
+
+    <section id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <button class="modal-close" data-close="settings" type="button" aria-label="Close">✕</button>
+      <div class="kicker">SYSTEM // 系统设置</div>
+      <h2 id="settingsTitle" class="modal-title">调校你的战场</h2>
+      <div class="settings-body">
+        <div class="setting-row">
+          <label for="setMaster">主音量 <span>MASTER</span></label>
+          <input id="setMaster" type="range" min="0" max="100" step="1">
+          <output id="valMaster">80</output>
+        </div>
+        <div class="setting-row">
+          <label for="setMusic">音乐 <span>MUSIC</span></label>
+          <input id="setMusic" type="range" min="0" max="100" step="1">
+          <output id="valMusic">70</output>
+        </div>
+        <div class="setting-row">
+          <label for="setSfx">音效 <span>SFX</span></label>
+          <input id="setSfx" type="range" min="0" max="100" step="1">
+          <output id="valSfx">80</output>
+        </div>
+        <div class="setting-row">
+          <label for="setOffset">音画偏移 <span>A/V OFFSET</span></label>
+          <input id="setOffset" type="range" min="-150" max="150" step="5">
+          <output id="valOffset">0ms</output>
+        </div>
+        <p class="setting-note">若你觉得节拍视觉总是比声音快/慢，滑动此项直到圆环闭合的瞬间正好是鼓点。画面与判定会一起移动。</p>
+        <div class="setting-row toggle-row">
+          <label>屏幕震动 <span>SCREEN SHAKE</span></label>
+          <input id="setShake" type="range" min="0" max="100" step="10">
+          <output id="valShake">100</output>
+        </div>
+        <div class="setting-row toggle-row">
+          <label for="setFlash">强光闪烁 <span>FLASHES</span></label>
+          <label class="switch"><input id="setFlash" type="checkbox"><span></span></label>
+        </div>
+        <div class="setting-row toggle-row">
+          <label for="setScan">扫描线滤镜 <span>SCANLINES</span></label>
+          <label class="switch"><input id="setScan" type="checkbox"><span></span></label>
+        </div>
+      </div>
+      <div class="settings-footer">
+        <button id="btnResetSettings" class="btn btn-small btn-ghost" type="button">恢复默认 / RESET</button>
+        <button class="btn btn-small modal-close-btn" data-close="settings" type="button">完成 / DONE</button>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden">
+      <span class="toast-key">TIP</span>
+      <span id="toastText"></span>
+    </div>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/content.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

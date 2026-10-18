@@ -1,0 +1,4 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"></head><body><pre id="o"></pre><script type="module">
+import { renderSoundtrackWindow } from './audio.js';
+(async()=>{const q=new URLSearchParams(location.search);const a=+(q.get('start')||0),b=+(q.get('end')||96);try{const t0=performance.now();const buf=await renderSoundtrackWindow(a,b,48000);let peak=0,rms=0,n=0;for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<d.length;i+=3){const v=Math.abs(d[i]);if(v>peak)peak=v;rms+=d[i]*d[i];n++;}}window.__done={start:a,end:b,peak:+peak.toFixed(2),rms:+Math.sqrt(rms/n).toFixed(2),ms:Math.round(performance.now()-t0)};}catch(e){window.__done={error:e.stack||String(e)};}document.getElementById('o').textContent=JSON.stringify(window.__done);})();
+</script></body></html>
